@@ -1,14 +1,15 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 ## Table of contents
 
 - [Ally custom driver boilerplate](#ally-custom-driver-boilerplate)
   - [Getting started](#getting-started)
   - [How is the code structured?](#how-is-the-code-structured)
-      - [YourDriverAccessToken](#yourdriveraccesstoken)
-      - [YourDriverScopes](#yourdriverscopes)
-      - [YourDriverConfig](#yourdriverconfig)
-      - [YourDriver](#yourdriver)
+    - [YourDriverAccessToken](#yourdriveraccesstoken)
+    - [YourDriverScopes](#yourdriverscopes)
+    - [YourDriverConfig](#yourdriverconfig)
+    - [YourDriver](#yourdriver)
   - [Development checklist](#development-checklist)
   - [Testing the driver](#testing-the-driver)
   - [Release checklist](#release-checklist)
@@ -20,6 +21,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Ally custom driver boilerplate
+
 > A boilerplate for creating custom AdonisJS ally drivers
 
 This repo serves as a starting point to create your custom OAuth2 drivers for [AdonisJS ally](https://docs.adonisjs.com/guides/auth/social).
@@ -27,9 +29,10 @@ This repo serves as a starting point to create your custom OAuth2 drivers for [A
 The boilerplate is tailored to create one driver per project and publish it as a package on npm.
 
 ## Getting started
+
 Following are the steps to get started.
 
-- Fork this repo and then clone it on your local machine. 
+- Fork this repo and then clone it on your local machine.
 - Install all the dependencies using `npm` or `yarn` (whatever you prefer).
 - Open `package.json` file and update the package `name`, `description` and the `adonisjs` configuration block.
 
@@ -39,14 +42,13 @@ Following are the steps to get started.
     "description": "",
     "adonisjs": {
       "types": "package-name",
-      "providers": [
-        "package-name"
-      ]
+      "providers": ["package-name"]
     }
   }
   ```
 
 ## How is the code structured?
+
 The code for the driver is inside the `src` directory. Make sure to change the `YourDriver` directory name to the name of the driver.
 
 The driver implementation is mainly driven by the config, except the `user` and the `userFromToken` methods. Both of these methods are specific to the Oauth provider, and hence you have to implement them yourself.
@@ -54,6 +56,7 @@ The driver implementation is mainly driven by the config, except the `user` and 
 The `src/YourDriver/index.ts` file has the following exports.
 
 #### YourDriverAccessToken
+
 The type defines the properties that exist on the access token returned by your driver. You must read your OAuth provider documentation and list all the properties here.
 
 **Do not change the pre-defined `token` and `bearer` properties.**
@@ -66,9 +69,11 @@ export type YourDriverAccessToken = {
 ```
 
 #### YourDriverScopes
+
 Define a union of driver scopes accepted by your OAuth provider. You can check out the [official implementations](https://github.com/adonisjs/ally/blob/develop/adonis-typings/ally.ts#L236-L268) to see how they are defined.
 
 #### YourDriverConfig
+
 The type defines the configuration options that your driver expects. It must specify the following mentioned properties, along with any additional properties your driver needs to be functional.
 
 ```ts
@@ -84,6 +89,7 @@ export type YourDriverConfig = {
 ```
 
 #### YourDriver
+
 The driver implementation is a standard TypeScript class that extends the base `Oauth2Driver` class. The base driver class enforces you to define the following instance properties.
 
 - `authorizeUrl` is the URL for the redirect request. The user is redirected to this URL to authorize the request. Check out provider docs to find this URL.
@@ -124,17 +130,17 @@ You can test the driver by installing it locally inside your AdonisJS applicatio
 - Run `node ace configure <package-name>`. The configure command needs the package name and not the package path.
 - Inform typescript about your driver by defining a mapping inside the `contracts/ally.ts` file.
 
-	```ts
-	import { YourDriverConfig, YourDriver } from 'ally-custom-driver/build/standalone'
-	
-	interface SocialProviders {
-		yourDriver: {
-			config: YourDriverConfig,
-			implementation: YourDriver
-		}
-	}
-	```
-	
+  ```ts
+  import { YourDriverConfig, YourDriver } from 'ally-custom-driver/build/standalone'
+
+  interface SocialProviders {
+    yourDriver: {
+      config: YourDriverConfig
+      implementation: YourDriver
+    }
+  }
+  ```
+
 - Define the config inside the `config/ally.ts` file.
 - And now you can use your driver like any other inbuilt driver.
 
@@ -157,8 +163,7 @@ You can configure the redirect request by implementing the `configureRedirectReq
 protected configureRedirectRequest(request: RedirectRequest<YourDriverScopes>) {
 	request.param('key', 'value')
 }
-``` 
-
+```
 
 ### How do I define extra fields/params for the access token request?
 
