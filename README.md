@@ -161,7 +161,7 @@ You can configure the redirect request by implementing the `configureRedirectReq
 
 ```ts
 protected configureRedirectRequest(request: RedirectRequest<YourDriverScopes>) {
-	request.param('key', 'value')
+  request.param('key', 'value')
 }
 ```
 
@@ -171,11 +171,11 @@ You can configure the access token request by implementing the `configureAccessT
 
 ```ts
 protected configureAccessTokenRequest(request: ApiRequest) {
-	// Request body
-	request.field('key', 'value')
+  // Request body
+  request.field('key', 'value')
 
-	// Query param
-	request.param('key', 'value')
+  // Query param
+  request.param('key', 'value')
 }
 ```
 
