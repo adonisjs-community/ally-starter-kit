@@ -1,7 +1,7 @@
 # Ally driver boilerplate
 > A boilerplate for creating custom AdonisJS Ally drivers
 
-This repo is a starting point to create your custom OAuth2 drivers for [AdonisJS ally](https://docs.adonisjs.com/guides/social_auth).
+This repo is a starting point to create your custom OAuth2 drivers for [AdonisJS ally](https://docs.adonisjs.com/guides/authentication/social-authentication).
 
 The boilerplate is tailored to create one driver per project and publish it as a package on npm.
 
@@ -11,12 +11,13 @@ Following are the steps to get started.
 
 - Fork this repo and then clone it on your local machine.
 - Install all the dependencies using `npm`, `pnpm`, or `yarn` (whatever you prefer).
-- Open the `package.json` file and update the package `name` and `description`.
+- Open the `package.json` file and update the `name`, `description`, and the `author` details.
 
   ```json
   {
-    "name": "",
-    "description": "",
+    "name": "ally-custom-service",
+    "description": "Starter kit to create an Ally driver for an OAuth2 service",
+    "author": ""
   }
   ```
 
