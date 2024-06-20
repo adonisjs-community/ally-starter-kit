@@ -3,25 +3,26 @@
 | Ally Oauth driver
 |--------------------------------------------------------------------------
 |
-| This is a dummy implementation of the Oauth driver. Make sure you
-|
-| - Got through every line of code
-| - Read every comment
+| Make sure you through the code and comments properly and make necessary
+| changes as per the requirements of your implementation.
 |
 */
 
-import type { AllyUserContract } from '@ioc:Adonis/Addons/Ally'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { Oauth2Driver, ApiRequest } from '@adonisjs/ally/build/standalone'
+/**
+|--------------------------------------------------------------------------
+ *  Search keyword "YourDriver" and replace it with a meaningful name
+|--------------------------------------------------------------------------
+ */
+
+import { Oauth2Driver } from '@adonisjs/ally'
+import type { HttpContext } from '@adonisjs/core/http'
+import type { AllyDriverContract, AllyUserContract, ApiRequestContract } from '@adonisjs/ally/types'
 
 /**
- * Define the access token object properties in this type. It
- * must have "token" and "type" and you are free to add
- * more properties.
  *
- * ------------------------------------------------
- * Change "YourDriver" to something more relevant
- * ------------------------------------------------
+ * Access token returned by your driver implementation. An access
+ * token must have "token" and "type" properties and you may
+ * define additional properties (if needed)
  */
 export type YourDriverAccessToken = {
   token: string
@@ -29,25 +30,14 @@ export type YourDriverAccessToken = {
 }
 
 /**
- * Define a union of scopes your driver accepts. Here's an example of same
- * https://github.com/adonisjs/ally/blob/develop/adonis-typings/ally.ts#L236-L268
- *
- * ------------------------------------------------
- * Change "YourDriver" to something more relevant
- * ------------------------------------------------
+ * Scopes accepted by the driver implementation.
  */
 export type YourDriverScopes = string
 
 /**
- * Define the configuration options accepted by your driver. It must have the following
- * properties and you are free add more.
- *
- * ------------------------------------------------
- * Change "YourDriver" to something more relevant
- * ------------------------------------------------
+ * The configuration accepted by the driver implementation.
  */
 export type YourDriverConfig = {
-  driver: 'YourDriverName'
   clientId: string
   clientSecret: string
   callbackUrl: string
@@ -57,13 +47,13 @@ export type YourDriverConfig = {
 }
 
 /**
- * Driver implementation. It is mostly configuration driven except the user calls
- *
- * ------------------------------------------------
- * Change "YourDriver" to something more relevant
- * ------------------------------------------------
+ * Driver implementation. It is mostly configuration driven except the API call
+ * to get user info.
  */
-export class YourDriver extends Oauth2Driver<YourDriverAccessToken, YourDriverScopes> {
+export class YourDriver
+  extends Oauth2Driver<YourDriverAccessToken, YourDriverScopes>
+  implements AllyDriverContract<YourDriverAccessToken, YourDriverScopes>
+{
   /**
    * The URL for the redirect request. The user will be redirected on this page
    * to authorize the request.
@@ -125,7 +115,10 @@ export class YourDriver extends Oauth2Driver<YourDriverAccessToken, YourDriverSc
    */
   protected scopesSeparator = ' '
 
-  constructor(ctx: HttpContextContract, public config: YourDriverConfig) {
+  constructor(
+    ctx: HttpContext,
+    public config: YourDriverConfig
+  ) {
     super(ctx, config)
 
     /**
@@ -155,7 +148,7 @@ export class YourDriver extends Oauth2Driver<YourDriverAccessToken, YourDriverSc
    * Update the implementation to tell if the error received during redirect
    * means "ACCESS DENIED".
    */
-  public accessDenied() {
+  accessDenied() {
     return this.ctx.request.input('error') === 'user_denied'
   }
 
@@ -166,34 +159,34 @@ export class YourDriver extends Oauth2Driver<YourDriverAccessToken, YourDriverSc
    *
    * https://github.com/adonisjs/ally/blob/develop/src/Drivers/Google/index.ts#L191-L199
    */
-  public async user(
-    callback?: (request: ApiRequest) => void
+  async user(
+    callback?: (request: ApiRequestContract) => void
   ): Promise<AllyUserContract<YourDriverAccessToken>> {
     const accessToken = await this.accessToken()
     const request = this.httpClient(this.config.userInfoUrl || this.userInfoUrl)
 
     /**
      * Allow end user to configure the request. This should be called after your custom
-     * configuration, so that the user can override them (if required)
+     * configuration, so that the user can override them (if needed)
      */
     if (typeof callback === 'function') {
       callback(request)
     }
 
     /**
-     * Write your implementation details here
+     * Write your implementation details here.
      */
   }
 
-  public async userFromToken(
+  async userFromToken(
     accessToken: string,
-    callback?: (request: ApiRequest) => void
+    callback?: (request: ApiRequestContract) => void
   ): Promise<AllyUserContract<{ token: string; type: 'bearer' }>> {
     const request = this.httpClient(this.config.userInfoUrl || this.userInfoUrl)
 
     /**
      * Allow end user to configure the request. This should be called after your custom
-     * configuration, so that the user can override them (if required)
+     * configuration, so that the user can override them (if needed)
      */
     if (typeof callback === 'function') {
       callback(request)
@@ -203,4 +196,12 @@ export class YourDriver extends Oauth2Driver<YourDriverAccessToken, YourDriverSc
      * Write your implementation details here
      */
   }
+}
+
+/**
+ * The factory function to reference the driver implementation
+ * inside the "config/ally.ts" file.
+ */
+export function YourDriverService(config: YourDriverConfig): (ctx: HttpContext) => YourDriver {
+  return (ctx) => new YourDriver(ctx, config)
 }

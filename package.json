@@ -1,56 +1,44 @@
 {
-  "name": "ally-custom-driver",
+  "name": "ally-custom-service",
+  "description": "Starter kit to create an Ally driver for an OAuth2 service",
   "version": "0.0.0",
-  "description": "A boilerplate for a custom ally driver",
-  "main": "build/providers/index.js",
+  "main": "index.js",
+  "type": "module",
   "files": [
-    "build/src",
-    "build/providers",
-    "build/standalone.js",
-    "build/standalone.d.ts",
-    "build/instructions.md"
+    "build/index.js",
+    "build/index.d.ts",
+    "build/src"
   ],
   "scripts": {
-    "clean": "del build",
-    "copyfiles": "copyfiles \"instructions.md\" build",
-    "compile": "npm run lint && npm run clean && tsc",
-    "build": "npm run compile && npm run copyfiles",
-    "prepublishOnly": "npm run build",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "version": "npm run build"
+    "typecheck": "tsc --noEmit",
+    "pretest": "npm run lint",
+    "build": "tsc"
   },
-  "keywords": [
-    "adonisjs",
-    "adonis-ally"
-  ],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
-    "@adonisjs/ally": "^4.0.0",
-    "@adonisjs/core": "^5.1.8",
-    "@types/node": "^15.12.2",
-    "del-cli": "^3.0.1",
-    "eslint": "^7.28.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-adonis": "^1.3.2",
-    "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.3.1",
-    "typescript": "^4.3.2"
+    "@adonisjs/ally": "^5.0.0-7",
+    "@adonisjs/core": "^6.1.5-32",
+    "@adonisjs/eslint-config": "^1.3.0",
+    "@adonisjs/prettier-config": "^1.3.0",
+    "@adonisjs/tsconfig": "^1.3.0",
+    "@swc/core": "^1.6.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   },
   "peerDependencies": {
-    "@adonisjs/ally": "^4.0.0",
-    "@adonisjs/core": "^5.0.0"
+    "@adonisjs/ally": "^5.0.0-7",
+    "@adonisjs/core": "^6.1.5-32"
   },
-  "adonisjs": {
-    "instructionsMd": "./build/instructions.md",
-    "env": {
-      "YOUR_DRIVER_CLIENT_ID": "",
-      "YOUR_DRIVER_CLIENT_SECRET": ""
-    },
-    "types": "ally-custom-driver",
-    "providers": [
-      "ally-custom-driver"
-    ]
-  }
+  "author": "",
+  "license": "MIT",
+  "keywords": [
+    "social-auth",
+    "adonisjs-ally",
+    "adonisjs"
+  ],
+  "eslintConfig": {
+    "extends": "@adonisjs/eslint-config/package"
+  },
+  "prettier": "@adonisjs/prettier-config"
 }
